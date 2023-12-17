@@ -1,37 +1,116 @@
-table {
+/* Style for the top-level table container */
+.table-container {
     width: 100%;
-    /* Makes the table use the full width of its container */
+}
+
+/* Styling for the top-level table and sticky header */
+.table-container table {
+    width: 100%;
     border-collapse: collapse;
-    /* Removes space between borders */
+    /* Remove space between borders */
 }
 
-th,
-td {
-    border: 1px solid black;
-    /* Adds borders to table cells */
+.table-container thead th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
     text-align: left;
-    /* Aligns text to the left; adjust as needed */
     padding: 8px;
-    /* Adds some padding inside cells for better readability */
+    border-bottom: 1px solid #ddd;
 }
 
-th {
-    background-color: #f2f2f2;
-    /* Optional: background color for header cells */
+/* Column widths for the top-level table */
+.table-container th:nth-child(1) {
+    width: 25%;
 }
 
-@media screen and (max-width: 600px) {
-    table {
-        display: block;
-        overflow-x: auto;
-    }
+.table-container th:nth-child(2) {
+    width: 25%;
 }
 
+.table-container th:nth-child(3) {
+    width: 25%;
+}
+
+.table-container th:nth-child(4) {
+    width: 25%;
+}
+
+/* Common styles for all table cells */
+.table-container td,
+.table-container th {
+    padding: 8px;
+    /* Adjust padding as needed */
+    text-align: left;
+    box-sizing: border-box;
+    /* Include padding and border in width */
+}
+
+/* Styles for the collapsible content and inner tables */
+.collapsible-content table {
+    width: 100%;
+    /* Ensure inner tables are full width */
+    border-collapse: collapse;
+}
+
+.collapsible-content td,
+.collapsible-content th {
+    padding: 8px;
+    /* Consistent with the top-level table */
+    text-align: left;
+}
+
+/* Column widths for the inner tables */
+.collapsible-content td:nth-child(1) {
+    width: 25%;
+}
+
+.collapsible-content td:nth-child(2) {
+    width: 25%;
+}
+
+.collapsible-content td:nth-child(3) {
+    width: 25%;
+}
+
+.collapsible-content td:nth-child(4) {
+    width: 25%;
+}
+
+/* Style for the description in the collapsible content */
 .description {
     margin: 10px 0;
-    /* Adds margin space around the description */
     color: darkgrey;
-    /* Sets the text color to dark grey */
     font-style: italic;
-    /* Makes the text italic */
 }
+
+/* Odd groups with light blue background */
+.table-container tbody tr:nth-child(odd) .collapsible-content {
+    background-color: lightblue;
+}
+
+/* Even groups with blue background */
+.table-container tbody tr:nth-child(even) .collapsible-content {
+    background-color: lightgreen;
+}
+
+.Collapsible__trigger {
+    display: block;
+    padding: 10px;
+    margin: 10px 0;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  /* Styling for odd and even triggers */
+  .table-container tbody tr:nth-child(odd) .Collapsible__trigger {
+    background-color: lightblue;
+  }
+  
+  .table-container tbody tr:nth-child(even) .Collapsible__trigger {
+    background-color: lightgreen;
+  }
+  

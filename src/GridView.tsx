@@ -35,7 +35,7 @@ const GridView = () => {
   ];
 
   return (
-    <div>
+    <div className="table-container">
       <table>
         <thead>
           <tr>
@@ -45,23 +45,31 @@ const GridView = () => {
             <th>At Approval/Rejection</th>
           </tr>
         </thead>
+        <tbody>
+          {data_new.map((group, index) => (
+            <tr>
+              <td colSpan={4}>
+                <Collapsible key={index} trigger={group.group.name}>
+                  <div className="collapsible-content">
+                    <table>
+                      <tbody>
+                        {group.group.content.map((item, itemIndex) => (
+                          <tr key={index}>
+                            <td>{item.key.name}<br /><div className="description">{item.key.description}</div></td>
+                            {item.value.map((val, valIndex) => (
+                              <td key={valIndex}>{val}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </Collapsible>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
-      {data_new.map((group, index) => (
-        <Collapsible key={index} trigger={group.group.name}>
-          <table>
-            <tbody>
-              {group.group.content.map((item, itemIndex) => (
-                <tr key={index}>
-                  <td>{item.key.name}<br /><div className="description">{item.key.description}</div></td>
-                  {item.value.map((val, valIndex) => (
-                    <td key={valIndex}>{val}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Collapsible>
-      ))}
     </div>
   );
 };
