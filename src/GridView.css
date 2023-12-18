@@ -103,14 +103,24 @@
     cursor: pointer;
     border-radius: 5px;
     font-weight: bold;
-  }
-  
-  /* Styling for odd and even triggers */
-  .table-container tbody tr:nth-child(odd) .Collapsible__trigger {
+}
+
+/* Styling for odd and even triggers */
+.table-container tbody tr:nth-child(odd) .Collapsible__trigger {
     background-color: lightblue;
-  }
-  
-  .table-container tbody tr:nth-child(even) .Collapsible__trigger {
+}
+
+.table-container tbody tr:nth-child(even) .Collapsible__trigger {
     background-color: lightgreen;
-  }
-  
+}
+
+.editable-cell-input {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    padding: 8px;
+}
+
+.editable-cell-div {
+    cursor: pointer;
+}

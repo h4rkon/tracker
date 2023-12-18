@@ -1,6 +1,7 @@
 import React from 'react';
 import './GridView.css'; // Assuming you have a CSS file for styles
 import Collapsible from 'react-collapsible';
+import EditableCell from './EditableCell';
 
 
 const GridView = () => {
@@ -49,7 +50,7 @@ const GridView = () => {
           {data_new.map((group, index) => (
             <tr>
               <td colSpan={4}>
-                <Collapsible key={index} trigger={group.group.name}>
+                <Collapsible key={index} trigger={group.group.name} open={true}>
                   <div className="collapsible-content">
                     <table>
                       <tbody>
@@ -57,7 +58,9 @@ const GridView = () => {
                           <tr key={index}>
                             <td>{item.key.name}<br /><div className="description">{item.key.description}</div></td>
                             {item.value.map((val, valIndex) => (
-                              <td key={valIndex}>{val}</td>
+                              <td key={valIndex}>
+                                <EditableCell value={val} onValueChange={(newValue) => console.log('Value changed to:', newValue)} />
+                              </td>
                             ))}
                           </tr>
                         ))}
