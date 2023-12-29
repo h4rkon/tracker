@@ -124,3 +124,46 @@
 .editable-cell-div {
     cursor: pointer;
 }
+
+/* Increased specificity for the comments collapsible trigger */
+.table-container tbody tr .comments-collapsible .Collapsible__trigger {
+    color: darkgrey;  /* Dark grey text for the trigger */
+    font-size: 0.9em; /* Smaller font size */
+    cursor: pointer;  /* Cursor changes to pointer to indicate it's clickable */
+    padding: 4px;     /* Some padding for better spacing */
+    margin-top: 10px; /* Margin on top for spacing from the cell value */
+    background-color: transparent; /* Override background color */
+}
+
+
+.comments-table {
+    width: 100%; /* Full width */
+    border-collapse: collapse; /* Clean look */
+}
+
+.comments-table td {
+    padding: 4px;
+    border-top: 1px solid #ddd; /* Separator between comments */
+}
+
+.comments-table td div:first-child {
+    font-weight: bold; /* Make username and datetime bold */
+    color: #555; /* Slightly darker color for emphasis */
+    margin-bottom: 2px; /* Spacing between username/datetime and comment text */
+}
+
+.comments-table td div:last-child {
+    color: #666; /* Color for comment text */
+}
+
+/* Optional: Style for hover effect on table rows */
+.comments-table tr:hover {
+    background-color: #f2f2f2; /* Light grey background on hover */
+}
+
+.Collapsible__trigger, 
+.Collapsible__trigger--open, 
+.Collapsible__trigger.is-open {
+    color: darkgrey; /* Keeps the color consistent */
+    /* Other consistent styles */
+}

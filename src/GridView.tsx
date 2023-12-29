@@ -3,8 +3,8 @@ import './GridView.css'; // Assuming you have a CSS file for styles
 import Collapsible from 'react-collapsible';
 import EditableCell from './EditableCell';
 
-import { getSubmission, updateCell } from './apiService'; // Import the function from apiService
-import { Submission, Group, Attribute, Key, SingleValue, ChangeHistory } from './model';
+import { getSubmission, updateCell, updateComment } from './apiService'; // Import the function from apiService
+import { Submission, Group, Attribute, Key, SingleValue, ChangeHistory, ValueComment } from './model';
 
 const GridView = () => {
   const [data, setData] = useState<Group[]>([]); // State to store fetched data
@@ -20,6 +20,29 @@ const GridView = () => {
     };
     loadData();
   }, []);
+
+  const handleCommentChange = async (
+    groupIndex: number,
+    itemIndex: number,
+    column: 'onDispatch' | 'onSubmission' | 'onApprovalOrDenial',
+    newComment: string
+  ) => {
+    const updatedData = [...data];
+    
+    const change: ValueComment = {
+      user: "DummyUser",
+      datetime: new Date(),
+      comment: newComment
+    }
+
+    try {
+      await updateComment(groupIndex, itemIndex, column, change);
+      console.log('Cell updated successfully');
+  } catch (error) {
+      console.error('Error updating cell:', error);
+      // Optionally, revert the local state update in case of an error
+  }
+  }
 
   const handleValueChange = async (
     groupIndex: number,
@@ -81,20 +104,32 @@ const GridView = () => {
                                   value={item.onDispatch.value}
                                   identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onDispatch" }}
                                   onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onDispatch', newValue)} 
-                                  history={item.onDispatch.history}/>
+                                  onCommentChange={(newComment) => 
+                                    handleCommentChange(groupIndex, itemIndex, 'onDispatch', newComment)
+                                  }
+                                  history={item.onDispatch.history}
+                                  comments={item.onDispatch.comments}/>
                             </td>
                             <td>
                               <EditableCell
                                   value={item.onSubmission.value}
                                   identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onSubmission" }}
                                   onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onSubmission', newValue)}
-                                  history={item.onSubmission.history}/>
+                                  onCommentChange={(newComment) => 
+                                    handleCommentChange(groupIndex, itemIndex, 'onSubmission', newComment)
+                                  }
+                                  history={item.onSubmission.history}
+                                  comments={item.onSubmission.comments}/>
                             </td><td>
                               <EditableCell
                                   value={item.onApprovalOrDenial.value}
                                   identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onApprovalOrDenial" }}
                                   onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onApprovalOrDenial', newValue)}
-                                  history={item.onApprovalOrDenial.history}/>
+                                  onCommentChange={(newComment) => 
+                                    handleCommentChange(groupIndex, itemIndex, 'onApprovalOrDenial', newComment)
+                                  }
+                                  history={item.onApprovalOrDenial.history}
+                                  comments={item.onApprovalOrDenial.comments}/>
                             </td>
                           </tr>
                         ))}

@@ -12,9 +12,16 @@ export interface ChangeHistory {
     newValue: string
 }
 
+export interface ValueComment {
+    user: string;
+    datetime: Date;
+    comment: string
+}
+
 export interface SingleValue {
     value: string;
     history: ChangeHistory[];
+    comments: ValueComment[]
 }
 
 export interface Attribute {
