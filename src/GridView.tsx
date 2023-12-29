@@ -1,40 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './GridView.css'; // Assuming you have a CSS file for styles
 import Collapsible from 'react-collapsible';
 import EditableCell from './EditableCell';
 
+import { getSubmission, updateCell } from './apiService'; // Import the function from apiService
+import { Submission, Group, Attribute, Key, SingleValue } from './model';
 
 const GridView = () => {
-  const data_new = [
-    {
-      group: {
-        name: 'Group 1', content: [
-          { key: { name: 'Group1 - Key1', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.1.1', 'Value1.1.2', 'Value1.1.3'] },
-          { key: { name: 'Group1 - Key2', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.2.1', 'Value1.2.2', 'Value1.2.3'] },
-          { key: { name: 'Group1 - Key3', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.3.1', 'Value1.3.2', 'Value1.3.3'] },
-          { key: { name: 'Group1 - Key1', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.1.1', 'Value1.1.2', 'Value1.1.3'] },
-          { key: { name: 'Group1 - Key2', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.2.1', 'Value1.2.2', 'Value1.2.3'] },
-          { key: { name: 'Group1 - Key3', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.3.1', 'Value1.3.2', 'Value1.3.3'] },
-          { key: { name: 'Group1 - Key1', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.1.1', 'Value1.1.2', 'Value1.1.3'] },
-          { key: { name: 'Group1 - Key2', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.2.1', 'Value1.2.2', 'Value1.2.3'] },
-          { key: { name: 'Group1 - Key3', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.3.1', 'Value1.3.2', 'Value1.3.3'] },
-          { key: { name: 'Group1 - Key1', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.1.1', 'Value1.1.2', 'Value1.1.3'] },
-          { key: { name: 'Group1 - Key2', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.2.1', 'Value1.2.2', 'Value1.2.3'] },
-          { key: { name: 'Group1 - Key3', description: 'Lorem ipsum dolor sit amet' }, value: ['Value1.3.1', 'Value1.3.2', 'Value1.3.3'] }
-        ]
-      },
-    },
-    {
-      group: {
-        name: 'Group 2', content: [
-          { key: { name: 'Group2 - Key1', description: 'Lorem ipsum dolor sit amet' }, value: ['Value2.1.1', 'Value2.1.2', 'Value2.1.3'] },
-          { key: { name: 'Group2 - Key2', description: 'Lorem ipsum dolor sit amet' }, value: ['Value2.2.1', 'Value2.2.2', 'Value2.2.3'] },
-          { key: { name: 'Group2 - Key3', description: 'Lorem ipsum dolor sit amet' }, value: ['Value2.3.1', 'Value2.3.2', 'Value2.3.3'] }
-        ]
-      },
-    },
-  ];
+  const [data, setData] = useState<Group[]>([]); // State to store fetched data
 
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const submissionData = await getSubmission();
+        setData(submissionData.content)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    };
+    loadData();
+  }, []);
+
+  const handleValueChange = async (
+    groupIndex: number,
+    itemIndex: number,
+    column: 'onDispatch' | 'onSubmission' | 'onApprovalOrDenial',
+    newValue: string
+  ) => {
+    // Update the local state first
+    const updatedData = [...data];
+    updatedData[groupIndex].content[itemIndex][column].value = newValue;
+    setData(updatedData);
+
+    // Then send the update to the server (or in this case, update the cached data)
+    try {
+        await updateCell(groupIndex, itemIndex, column, newValue);
+        console.log('Cell updated successfully');
+    } catch (error) {
+        console.error('Error updating cell:', error);
+        // Optionally, revert the local state update in case of an error
+    }
+  };
+
+  
   return (
     <div className="table-container">
       <table>
@@ -47,21 +55,33 @@ const GridView = () => {
           </tr>
         </thead>
         <tbody>
-          {data_new.map((group, index) => (
-            <tr>
+          {data.map((group, groupIndex) => (
+            <tr key={groupIndex}>
               <td colSpan={4}>
-                <Collapsible key={index} trigger={group.group.name} open={true}>
+                <Collapsible trigger={group.name} open={true}>
                   <div className="collapsible-content">
                     <table>
                       <tbody>
-                        {group.group.content.map((item, itemIndex) => (
-                          <tr key={index}>
+                        {group.content.map((item, itemIndex) => (
+                          <tr key={`${groupIndex}-${itemIndex}`}>
                             <td>{item.key.name}<br /><div className="description">{item.key.description}</div></td>
-                            {item.value.map((val, valIndex) => (
-                              <td key={valIndex}>
-                                <EditableCell value={val} onValueChange={(newValue) => console.log('Value changed to:', newValue)} />
-                              </td>
-                            ))}
+                            <td>
+                            <EditableCell
+                                  value={item.onDispatch.value}
+                                  identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onDispatch" }}
+                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onDispatch', newValue)} />
+                            </td>
+                            <td>
+                              <EditableCell
+                                  value={item.onSubmission.value}
+                                  identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onSubmission" }}
+                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onSubmission', newValue)} />
+                            </td><td>
+                              <EditableCell
+                                  value={item.onApprovalOrDenial.value}
+                                  identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onApprovalOrDenial" }}
+                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onApprovalOrDenial', newValue)} />
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -76,5 +96,6 @@ const GridView = () => {
     </div>
   );
 };
+
 
 export default GridView;
