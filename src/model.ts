@@ -5,8 +5,16 @@ export interface Key {
     description: string;
 }
 
+export interface ChangeHistory {
+    user: string;
+    datetime: Date;
+    oldValue: string,
+    newValue: string
+}
+
 export interface SingleValue {
     value: string;
+    history: ChangeHistory[];
 }
 
 export interface Attribute {

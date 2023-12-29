@@ -24,9 +24,9 @@ const createData = (): Submission => {
         for (let keyIndex=0; keyIndex<10; keyIndex++) {
             let attribute: Attribute = {
                 key: {name: `Group${groupIndex} - Key${keyIndex}`, description: "Lorem ipsum dolor sit amet"}, 
-                onDispatch: {value: `Value${groupIndex}.${keyIndex}.1`},
-                onSubmission: {value: `Value${groupIndex}.${keyIndex}.2`},
-                onApprovalOrDenial: {value: `Value${groupIndex}.${keyIndex}.3`},
+                onDispatch: {value: `Value${groupIndex}.${keyIndex}.1`, history: []},
+                onSubmission: {value: `Value${groupIndex}.${keyIndex}.2`, history: []},
+                onApprovalOrDenial: {value: `Value${groupIndex}.${keyIndex}.3`, history: []},
             }
             group.content.push(attribute)
         }

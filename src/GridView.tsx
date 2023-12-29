@@ -4,7 +4,7 @@ import Collapsible from 'react-collapsible';
 import EditableCell from './EditableCell';
 
 import { getSubmission, updateCell } from './apiService'; // Import the function from apiService
-import { Submission, Group, Attribute, Key, SingleValue } from './model';
+import { Submission, Group, Attribute, Key, SingleValue, ChangeHistory } from './model';
 
 const GridView = () => {
   const [data, setData] = useState<Group[]>([]); // State to store fetched data
@@ -29,8 +29,19 @@ const GridView = () => {
   ) => {
     // Update the local state first
     const updatedData = [...data];
-    updatedData[groupIndex].content[itemIndex][column].value = newValue;
-    setData(updatedData);
+    const attribute = updatedData[groupIndex].content[itemIndex];
+    const oldValue = attribute[column].value;
+
+    const change: ChangeHistory = {
+      user: "DummyUser", // Replace with actual user info if available
+      datetime: new Date(),
+      oldValue,
+      newValue
+    };
+    attribute[column].history.push(change);
+
+    attribute[column].value = newValue
+    setData(updatedData)
 
     // Then send the update to the server (or in this case, update the cached data)
     try {
@@ -69,18 +80,21 @@ const GridView = () => {
                             <EditableCell
                                   value={item.onDispatch.value}
                                   identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onDispatch" }}
-                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onDispatch', newValue)} />
+                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onDispatch', newValue)} 
+                                  history={item.onDispatch.history}/>
                             </td>
                             <td>
                               <EditableCell
                                   value={item.onSubmission.value}
                                   identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onSubmission" }}
-                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onSubmission', newValue)} />
+                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onSubmission', newValue)}
+                                  history={item.onSubmission.history}/>
                             </td><td>
                               <EditableCell
                                   value={item.onApprovalOrDenial.value}
                                   identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onApprovalOrDenial" }}
-                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onApprovalOrDenial', newValue)} />
+                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onApprovalOrDenial', newValue)}
+                                  history={item.onApprovalOrDenial.history}/>
                             </td>
                           </tr>
                         ))}

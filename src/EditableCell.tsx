@@ -1,5 +1,6 @@
 import { Server } from 'http';
 import React, { useState } from 'react';
+import { ChangeHistory } from './model';
 
 type EditableCellProps = {
   value: string;
@@ -9,9 +10,10 @@ type EditableCellProps = {
     columnName: string;
   };
   onValueChange: (newValue: string, identifier: EditableCellProps["identifier"]) => void;
+  history: ChangeHistory[]
 };
 
-const EditableCell: React.FC<EditableCellProps> = ({ value, identifier, onValueChange }) => {
+const EditableCell: React.FC<EditableCellProps> = ({ value, identifier, onValueChange, history }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value);
 
@@ -38,6 +40,10 @@ const EditableCell: React.FC<EditableCellProps> = ({ value, identifier, onValueC
     event.target.select();
   };
 
+  const historyTooltip = history?.map(entry => 
+    `${entry.datetime.toLocaleString()}: ${entry.user} changed from "${entry.oldValue}" to "${entry.newValue}"`
+  ).join('\n');
+
   return isEditing ? (
     <input
       className="editable-cell-input"
@@ -50,7 +56,9 @@ const EditableCell: React.FC<EditableCellProps> = ({ value, identifier, onValueC
       autoFocus
     />
   ) : (
-    <div onClick={() => setIsEditing(true)} className='editable-cell-div'>{value}</div>
+    <div 
+      title={historyTooltip} 
+      onClick={() => setIsEditing(true)} className='editable-cell-div'>{value}</div>
   );
 };
 
