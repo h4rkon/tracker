@@ -24,4 +24,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push Docker image
-        run: docker push h4rkon/tracker-app:${{ github.sha }}
+        run: |
+          docker push h4rkon/tracker-app:${{ github.sha }}
+          docker tag h4rkon/tracker-app:${{ github.sha }} h4rkon/tracker-app:latest
+          docker push h4rkon/tracker-app:latest
