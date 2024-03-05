@@ -5,7 +5,7 @@ type CommentsSectionProps = {
     open: boolean;
     comments: {
         user: string;
-        datetime: Date;
+        datetime: string;
         comment: string;
     }[];
 };

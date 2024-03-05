@@ -4,7 +4,7 @@ import Collapsible from 'react-collapsible';
 import EditableCell from './EditableCell';
 
 import { getSubmission, updateCell, updateComment } from './apiService'; // Import the function from apiService
-import { Submission, Group, Attribute, Key, SingleValue, ChangeHistory, ValueComment } from './model';
+import { Group, ChangeHistory, ValueComment } from './model';
 
 const GridView = () => {
   const [data, setData] = useState<Group[]>([]); // State to store fetched data
@@ -24,14 +24,13 @@ const GridView = () => {
   const handleCommentChange = async (
     groupIndex: number,
     itemIndex: number,
-    column: 'onDispatch' | 'onSubmission' | 'onApprovalOrDenial',
+    column: 'atDispatch' | 'atSubmission' | 'atOutcome',
     newComment: string
   ) => {
-    const updatedData = [...data];
     
     const change: ValueComment = {
       user: "DummyUser",
-      datetime: new Date(),
+      datetime: new Date().toLocaleString(),
       comment: newComment
     }
 
@@ -47,7 +46,7 @@ const GridView = () => {
   const handleValueChange = async (
     groupIndex: number,
     itemIndex: number,
-    column: 'onDispatch' | 'onSubmission' | 'onApprovalOrDenial',
+    column: 'atDispatch' | 'atSubmission' | 'atOutcome',
     newValue: string
   ) => {
     // Update the local state first
@@ -56,8 +55,9 @@ const GridView = () => {
     const oldValue = attribute[column].value;
 
     const change: ChangeHistory = {
+      id: 123,
       user: "DummyUser", // Replace with actual user info if available
-      datetime: new Date(),
+      datetime: new Date().toLocaleString(),
       oldValue,
       newValue
     };
@@ -101,35 +101,35 @@ const GridView = () => {
                             <td>{item.key.name}<br /><div className="description">{item.key.description}</div></td>
                             <td>
                             <EditableCell
-                                  value={item.onDispatch.value}
-                                  identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onDispatch" }}
-                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onDispatch', newValue)} 
+                                  value={item.atDispatch.value}
+                                  identifier={{ groupName: group.name, keyName: item.key.name, columnName: "atDispatch" }}
+                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'atDispatch', newValue)} 
                                   onCommentChange={(newComment) => 
-                                    handleCommentChange(groupIndex, itemIndex, 'onDispatch', newComment)
+                                    handleCommentChange(groupIndex, itemIndex, 'atDispatch', newComment)
                                   }
-                                  history={item.onDispatch.history}
-                                  comments={item.onDispatch.comments}/>
+                                  history={item.atDispatch.history}
+                                  comments={item.atDispatch.comments}/>
                             </td>
                             <td>
                               <EditableCell
-                                  value={item.onSubmission.value}
-                                  identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onSubmission" }}
-                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onSubmission', newValue)}
+                                  value={item.atSubmission.value}
+                                  identifier={{ groupName: group.name, keyName: item.key.name, columnName: "atSubmission" }}
+                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'atSubmission', newValue)}
                                   onCommentChange={(newComment) => 
-                                    handleCommentChange(groupIndex, itemIndex, 'onSubmission', newComment)
+                                    handleCommentChange(groupIndex, itemIndex, 'atSubmission', newComment)
                                   }
-                                  history={item.onSubmission.history}
-                                  comments={item.onSubmission.comments}/>
+                                  history={item.atSubmission.history}
+                                  comments={item.atSubmission.comments}/>
                             </td><td>
                               <EditableCell
-                                  value={item.onApprovalOrDenial.value}
-                                  identifier={{ groupName: group.name, keyName: item.key.name, columnName: "onApprovalOrDenial" }}
-                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'onApprovalOrDenial', newValue)}
+                                  value={item.atOutcome.value}
+                                  identifier={{ groupName: group.name, keyName: item.key.name, columnName: "atOutcome" }}
+                                  onValueChange={(newValue) => handleValueChange(groupIndex, itemIndex, 'atOutcome', newValue)}
                                   onCommentChange={(newComment) => 
-                                    handleCommentChange(groupIndex, itemIndex, 'onApprovalOrDenial', newComment)
+                                    handleCommentChange(groupIndex, itemIndex, 'atOutcome', newComment)
                                   }
-                                  history={item.onApprovalOrDenial.history}
-                                  comments={item.onApprovalOrDenial.comments}/>
+                                  history={item.atOutcome.history}
+                                  comments={item.atOutcome.comments}/>
                             </td>
                           </tr>
                         ))}

@@ -6,15 +6,16 @@ export interface Key {
 }
 
 export interface ChangeHistory {
+    id: number,
     user: string;
-    datetime: Date;
+    datetime: string;
     oldValue: string,
     newValue: string
 }
 
 export interface ValueComment {
     user: string;
-    datetime: Date;
+    datetime: string;
     comment: string
 }
 
@@ -26,9 +27,9 @@ export interface SingleValue {
 
 export interface Attribute {
     key: Key;
-    onDispatch: SingleValue;
-    onSubmission: SingleValue;
-    onApprovalOrDenial: SingleValue;
+    atDispatch: SingleValue;
+    atSubmission: SingleValue;
+    atOutcome: SingleValue;
 }
 
 export interface Group {
