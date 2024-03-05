@@ -1,0 +1,32 @@
+{
+    "content": [
+        {
+            "name": "Group A",
+            "content": [
+                {
+                    "key": {
+                        "name": "name",
+                        "description": "lorem ipsum",
+                        "comments": []
+                    },
+                    "atDispatch": {
+                        "value": "value",
+                        "history": [],
+                        "comments": []
+                    },
+                    "atSubmission": {
+                        "value": "",
+                        "history": [],
+                        "comments": []
+                    },
+                    "atOutcome": {
+                        "value": "",
+                        "history": [],
+                        "comments": []
+                    }
+                }
+            ]
+        }
+    ]
+  }
+  
